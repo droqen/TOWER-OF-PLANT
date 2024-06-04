@@ -43,6 +43,8 @@ jump={
 [layer_names]
 
 2d_physics/layer_4="kill"
+2d_physics/layer_5="plant"
+2d_physics/layer_7="pattack"
 
 [rendering]
 

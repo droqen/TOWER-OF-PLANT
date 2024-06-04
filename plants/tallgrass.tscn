@@ -1,0 +1,35 @@
+[gd_scene load_steps=5 format=3 uid="uid://pwd6ss41v4su"]
+
+[ext_resource type="Texture2D" uid="uid://d0e2qpi4qtuc5" path="res://media/twrfplnt.png" id="1_nu8na"]
+[ext_resource type="Script" path="res://navdi4/main/navdisheetsprite.gd" id="2_ati1t"]
+[ext_resource type="Resource" uid="uid://cc5ynn03nhybl" path="res://media/twrfplnt_sheet.tres" id="3_sa33o"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_plc8c"]
+size = Vector2(16, 32)
+
+[node name="Tallgrass" type="StaticBody2D"]
+collision_layer = 17
+collision_mask = 64
+
+[node name="SheetSprite" type="Sprite2D" parent="."]
+texture = ExtResource("1_nu8na")
+hframes = 10
+vframes = 14
+frame = 72
+script = ExtResource("2_ati1t")
+sheet = ExtResource("3_sa33o")
+frames = PackedInt32Array(72)
+
+[node name="SheetSprite2" type="Sprite2D" parent="."]
+position = Vector2(0, -16)
+texture = ExtResource("1_nu8na")
+hframes = 10
+vframes = 14
+frame = 62
+script = ExtResource("2_ati1t")
+sheet = ExtResource("3_sa33o")
+frames = PackedInt32Array(62)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(0, -8)
+shape = SubResource("RectangleShape2D_plc8c")

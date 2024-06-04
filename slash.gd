@@ -1,6 +1,7 @@
 extends Node2D
 
 signal just_hit_wall
+signal just_hit_plant(plantbody)
 
 var velocity : Vector2
 var life : int = 10
@@ -15,6 +16,10 @@ func setup(slasher : Node2D, vel : Vector2):
 	
 	$hitwall.body_entered.connect(func(_b):
 		just_hit_wall.emit()
+	)
+	
+	$hitplant.body_entered.connect(func(plantbody):
+		just_hit_plant.emit(plantbody)
 	)
 	
 	return self

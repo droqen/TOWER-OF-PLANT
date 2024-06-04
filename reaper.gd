@@ -113,3 +113,5 @@ func attack() -> void:
 		reapst.goto(WALL_PRECLASH)
 		slash.set.call_deferred('process_mode', PROCESS_MODE_DISABLED)
 	)
+	slash.just_hit_plant.connect(func(plant):
+		plant.queue_free())

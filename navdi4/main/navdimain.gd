@@ -97,7 +97,7 @@ func _ready() -> void:
 		
 		if OS.has_feature("editor"):
 			screenshotting_enabled = true
-			print("screenshotting enabled. (controls; 4 for a still shot, hold 5 for continuous video)")
+			print("framecapture tool enabled.")
 
 # TODO - this should all be in a separate node
 

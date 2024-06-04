@@ -19,3 +19,6 @@ mono_crash.*.json
 
 # no zip files
 *.zip
+
+# no captures folder
+captures/
