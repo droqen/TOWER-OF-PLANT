@@ -97,6 +97,8 @@ func _physics_process(delta: float) -> void:
 		$body.setup([12])
 	else:
 		$body.setup([13])
+	
+	position.x = fposmod(position.x, 256)
 
 var slash
 
