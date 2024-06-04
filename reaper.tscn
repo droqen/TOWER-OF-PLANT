@@ -1,39 +1,29 @@
 [gd_scene load_steps=7 format=3 uid="uid://dsc18jn2l4rns"]
 
 [ext_resource type="Script" path="res://reaper.gd" id="1_vik3m"]
-[ext_resource type="Texture2D" uid="uid://d0e2qpi4qtuc5" path="res://media/twrfplnt.png" id="2_ygnxc"]
+[ext_resource type="Texture2D" uid="uid://b4ihg3gdvc28r" path="res://media/scythe_player.png" id="2_wp72c"]
 [ext_resource type="Script" path="res://navdi4/main/navdisheetsprite.gd" id="3_s3fya"]
-[ext_resource type="Resource" uid="uid://cc5ynn03nhybl" path="res://media/twrfplnt_sheet.tres" id="4_idkrm"]
+[ext_resource type="Resource" uid="uid://dg10o506gmm7p" path="res://media/scythe_player_sheet.tres" id="4_ifale"]
 [ext_resource type="Script" path="res://navdi4/main/navdibodymover.gd" id="5_tq6ax"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_jyi46"]
-size = Vector2(8, 14)
+size = Vector2(6, 18)
 
 [node name="reaper" type="Node2D"]
 position = Vector2(40, 167)
 script = ExtResource("1_vik3m")
 
-[node name="head" type="Sprite2D" parent="."]
+[node name="SheetSprite" type="Sprite2D" parent="."]
 position = Vector2(0, -8)
-texture = ExtResource("2_ygnxc")
+texture = ExtResource("2_wp72c")
 hframes = 10
-vframes = 14
-frame = 2
+vframes = 4
 script = ExtResource("3_s3fya")
-sheet = ExtResource("4_idkrm")
-frames = PackedInt32Array(2)
-
-[node name="body" type="Sprite2D" parent="."]
-texture = ExtResource("2_ygnxc")
-hframes = 10
-vframes = 14
-frame = 12
-script = ExtResource("3_s3fya")
-sheet = ExtResource("4_idkrm")
-frames = PackedInt32Array(12)
+sheet = ExtResource("4_ifale")
+frames = PackedInt32Array(0, 1)
 
 [node name="mover" type="Node2D" parent="."]
-position = Vector2(0, 1)
+position = Vector2(0, -1)
 script = ExtResource("5_tq6ax")
 
 [node name="solidcast" type="ShapeCast2D" parent="mover"]

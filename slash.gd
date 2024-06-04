@@ -6,12 +6,12 @@ signal just_hit_plant(plantbody)
 var velocity : Vector2
 var life : int = 10
 
-func setup(slasher : Node2D, vel : Vector2):
+func setup(slasher : Node2D, dir : Vector2i):
 	slasher.add_child(self)
 	owner = slasher.owner if slasher.owner else slasher
-	$SheetSprite.flip_h = vel.x < 0
-	position = Vector2(signi(vel.x) * 10, -4)
-	velocity.x = signi(vel.x) * 2.0
+	$SheetSprite.flip_h = dir.x < 0
+	position = Vector2(dir.x * 10, -4)
+	#velocity.x = dir.x * 2.0
 	life = 10
 	
 	$hitwall.body_entered.connect(func(_b):

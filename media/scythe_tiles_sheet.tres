@@ -1,0 +1,11 @@
+[gd_resource type="Resource" script_class="Sheet" load_steps=3 format=3 uid="uid://0fbu1br4k5v2"]
+
+[ext_resource type="Script" path="res://navdi4/main/navdisheet.gd" id="1_fc0k2"]
+[ext_resource type="Texture2D" uid="uid://drdsuhls644wk" path="res://media/scythe_tiles.png" id="2_aq1ka"]
+
+[resource]
+script = ExtResource("1_fc0k2")
+texture = ExtResource("2_aq1ka")
+hframes = 10
+vframes = 10
+defaultframe = 0

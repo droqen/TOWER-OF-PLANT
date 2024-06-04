@@ -9,8 +9,10 @@ enum {
 	PINATTACKBUF, PINJUMPBUF, ONFLOORBUF,
 	WALL_PRECLASH_BUF, WALL_CLASHED_BUF,
 	
-	NORMAL, JUMPED, ATTACKING, WALL_PRECLASH, WALL_CLASHED,
+	NORMAL, JUMPED, ATTACKING, ATTACKING_FLOORSPIN, WALL_PRECLASH, WALL_CLASHED,
 }
+
+@onready var spr : SheetSprite = $SheetSprite
 
 @onready var bufs = Bufs.Make(self, [TURNHEADBUF,3, TURNBODYBUF,6,
 	ATTACK_DOING_BUF,16, ATTACK_RECOVERY_BUF,28,
@@ -22,8 +24,8 @@ enum {
 	#pass
 #)
 @onready var turnst = TinyState.new(1,func(_then,now):
-	var faceleft=now<0;$head.flip_h=faceleft;$body.flip_h=faceleft;bufs.on(TURNHEADBUF);bufs.on(TURNBODYBUF);
-)
+	var faceleft=now<0;spr.flip_h=faceleft;bufs.on(TURNHEADBUF);bufs.on(TURNBODYBUF);
+,true)
 
 @onready var reapst = TinyState.new(NORMAL,func(_then,now):
 	match now:
@@ -56,19 +58,25 @@ func _physics_process(delta: float) -> void:
 			velocity.x = move_toward(velocity.x * 0.95, 2.0 * pin_dpad.x, 0.15)
 			velocity.y = move_toward(velocity.y, -0.2, 0.1)
 			if not bufs.has(ATTACK_DOING_BUF): reapst.goto(NORMAL)
+		ATTACKING_FLOORSPIN:
+			velocity.x = move_toward(velocity.x * 0.95, 0.5 * pin_dpad.x, 0.10)
+			velocity.y = move_toward(velocity.y, 0.2, 0.1)
+			if not bufs.has(ATTACK_DOING_BUF): reapst.goto(NORMAL)
 		WALL_PRECLASH:
 			applyvel = false
 			if not bufs.has(WALL_PRECLASH_BUF): reapst.goto(WALL_CLASHED); if slash: slash.queue_free()
 		WALL_CLASHED:
 			if pin_dpad.x: turnst.goto(signi(pin_dpad.x))
-			velocity.x = move_toward(velocity.x, 2.0 * pin_dpad.x, 0.10)
+			velocity.x = move_toward(velocity.x, 2.0 * pin_dpad.x, 0.02)
 			velocity.y = move_toward(velocity.y, 2.0, 0.075)
 			if onfloor or not bufs.has(WALL_CLASHED_BUF): reapst.goto(NORMAL)
 		NORMAL, JUMPED:
-			if not bufs.has(ATTACK_RECOVERY_BUF) and bufs.try_eat([PINATTACKBUF]):
-				velocity.x = 3.0 * turnst.id
-				attack()
 			if velocity.y >= 0: reapst.goto(NORMAL)
+			if not bufs.has(ATTACK_RECOVERY_BUF) and bufs.try_eat([PINATTACKBUF]):
+				if onfloor:
+					attack_floor()
+				else:
+					attack_air()
 			if pin_dpad.x: turnst.goto(signi(pin_dpad.x))
 			
 			var gravity : float = 0.075
@@ -90,26 +98,45 @@ func _physics_process(delta: float) -> void:
 			velocity.y = 0 # hit floor/ceiling
 	
 	if bufs.has(ATTACK_DOING_BUF):
-		$body.setup([15])
+		match reapst.id:
+			ATTACKING_FLOORSPIN:
+				spr.setup([3])
+			ATTACKING, WALL_PRECLASH, WALL_CLASHED:
+				spr.setup([2])
+			_:
+				spr.setup([0])
+				prints("???",reapst.id)
 	elif bufs.has(TURNBODYBUF):
-		$body.setup([14])
+		spr.setup([0])
 	elif onfloor:
-		$body.setup([12])
+		spr.setup([0])
 	else:
-		$body.setup([13])
+		spr.setup([1])
 	
 	position.x = fposmod(position.x, 256)
 
 var slash
 
-func attack() -> void:
+func attack_floor() -> void:
+	velocity.x *= 1.5
+	reapst.goto(ATTACKING_FLOORSPIN)
+	bufs.on(ATTACK_DOING_BUF)
+	bufs.on(ATTACK_RECOVERY_BUF)
+	for xdir in [-1,0,1]:
+		slash = SLASH_SCENE.instantiate().setup(self, Vector2i(xdir,0))
+		slash.just_hit_plant.connect(func(plant):
+			plant.queue_free())
+
+func attack_air() -> void:
+	velocity.x = 3.0 * turnst.id
 	reapst.goto(ATTACKING)
 	bufs.on(ATTACK_DOING_BUF)
 	bufs.on(ATTACK_RECOVERY_BUF)
-	slash = SLASH_SCENE.instantiate().setup(self, velocity)
+	var slash_dir : Vector2i = Vector2i(turnst.id, 0)
+	slash = SLASH_SCENE.instantiate().setup(self, slash_dir * 2)
 	slash.just_hit_wall.connect(func():
-		velocity.x = -1.0 * turnst.id
-		velocity.y = -2.0
+		velocity.x = -1.5 * turnst.id
+		velocity.y = velocity.y * 0.6 - 2.0
 		reapst.goto(WALL_PRECLASH)
 		slash.set.call_deferred('process_mode', PROCESS_MODE_DISABLED)
 	)
