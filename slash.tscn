@@ -1,0 +1,35 @@
+[gd_scene load_steps=6 format=3 uid="uid://df7ryf5m08ysi"]
+
+[ext_resource type="Texture2D" uid="uid://d0e2qpi4qtuc5" path="res://media/twrfplnt.png" id="1_g2o30"]
+[ext_resource type="Script" path="res://slash.gd" id="1_h7utq"]
+[ext_resource type="Script" path="res://navdi4/main/navdisheetsprite.gd" id="2_nahnm"]
+[ext_resource type="Resource" uid="uid://cc5ynn03nhybl" path="res://media/twrfplnt_sheet.tres" id="3_jmcw2"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_jmxff"]
+size = Vector2(2, 16)
+
+[node name="slash" type="Node2D"]
+position = Vector2(58, 164)
+script = ExtResource("1_h7utq")
+
+[node name="SheetSprite" type="Sprite2D" parent="."]
+texture = ExtResource("1_g2o30")
+hframes = 10
+vframes = 14
+frame = 16
+script = ExtResource("2_nahnm")
+sheet = ExtResource("3_jmcw2")
+frames = PackedInt32Array(16)
+
+[node name="Area2D" type="Area2D" parent="."]
+collision_layer = 0
+collision_mask = 0
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D"]
+shape = SubResource("RectangleShape2D_jmxff")
+
+[node name="hitwall" type="Area2D" parent="."]
+collision_layer = 0
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="hitwall"]
+shape = SubResource("RectangleShape2D_jmxff")

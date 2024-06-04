@@ -1,0 +1,7 @@
+[gd_scene load_steps=2 format=3 uid="uid://c4kvm6flg3utw"]
+
+[ext_resource type="Script" path="res://navdi4/editortools/scripts/AutomakeSpritesheetStuff.gd" id="1_uv0oy"]
+
+[node name="AutomakeSpritesheetStuff" type="Node"]
+script = ExtResource("1_uv0oy")
+tile_size = Vector2i(16, 16)
