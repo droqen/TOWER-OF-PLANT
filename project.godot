@@ -14,7 +14,9 @@ config/name="TOWER OF PLANT"
 run/main_scene="res://main.tscn"
 config/features=PackedStringArray("4.3", "GL Compatibility")
 boot_splash/bg_color=Color(0.207843, 0.254902, 0.282353, 1)
+boot_splash/image="res://media/icon.png"
 boot_splash/fullsize=false
+config/icon="res://media/icon.png"
 
 [display]
 
