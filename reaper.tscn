@@ -10,7 +10,7 @@
 size = Vector2(6, 18)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_hdd2u"]
-size = Vector2(8, 8)
+size = Vector2(6, 4)
 
 [node name="reaper" type="Node2D"]
 position = Vector2(40, 167)
@@ -38,4 +38,5 @@ collision_layer = 0
 collision_mask = 1024
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="hurt_detector"]
+position = Vector2(0, 2)
 shape = SubResource("RectangleShape2D_hdd2u")

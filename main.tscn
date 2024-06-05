@@ -25,6 +25,7 @@ navigation_enabled = false
 script = ExtResource("4_ad58q")
 
 [node name="reaper" parent="." instance=ExtResource("3_81xe6")]
+position = Vector2(11, 151)
 
 [node name="PlantSprouter" type="Node" parent="." node_paths=PackedStringArray("maze")]
 script = ExtResource("6_0a0d1")

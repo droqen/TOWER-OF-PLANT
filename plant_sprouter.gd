@@ -6,10 +6,11 @@ const BADGRASS_PFB = preload("res://plants/scythe_badgrass.tscn")
 const THORNS_PFB = preload("res://plants/scythe_thorns.tscn")
 
 func _ready():
+	randomize()
 	var solids : int = 0
 	var liquids : int = 0
 	for cell in maze.get_used_cells():
-		if cell.x != 0 and cell.x != 15:
+		if cell.x > 0 and cell.x < 31:
 			if not is_maze_cell_solid(cell):
 				if is_maze_cell_solid(cell + Vector2i.DOWN):
 					spawn_plant([BADGRASS_PFB, THORNS_PFB][randi()%2], cell)
