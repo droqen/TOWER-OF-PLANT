@@ -8,8 +8,10 @@ enum {
 	TURNHEADBUF, TURNBODYBUF, ATTACK_DOING_BUF, ATTACK_RECOVERY_BUF,
 	PINATTACKBUF, PINJUMPBUF, ONFLOORBUF,
 	WALL_PRECLASH_BUF, WALL_CLASHED_BUF,
+	HURTSTUN_BUF, INVINC_BUF,
 	
 	NORMAL, JUMPED, ATTACKING, ATTACKING_FLOORSPIN, WALL_PRECLASH, WALL_CLASHED,
+	HURTSTUNNED,
 }
 
 @onready var spr : SheetSprite = $SheetSprite
@@ -17,8 +19,8 @@ enum {
 @onready var bufs = Bufs.Make(self, [TURNHEADBUF,3, TURNBODYBUF,6,
 	ATTACK_DOING_BUF,16, ATTACK_RECOVERY_BUF,28,
 	PINATTACKBUF,4, PINJUMPBUF,5, ONFLOORBUF,8,
-	WALL_PRECLASH_BUF,10,
-	WALL_CLASHED_BUF,30,
+	WALL_PRECLASH_BUF,10,	WALL_CLASHED_BUF,30,
+	HURTSTUN_BUF,30,		INVINC_BUF,89,
 ])
 #@onready var reapst = TinyState.new(NORMAL,func(_then,now):
 	#pass
@@ -31,6 +33,11 @@ enum {
 	match now:
 		WALL_PRECLASH: bufs.on(WALL_PRECLASH_BUF)
 		WALL_CLASHED: bufs.on(WALL_CLASHED_BUF)
+		HURTSTUNNED:
+			velocity.x = turnst.id * -1.0
+			velocity.y = -2.0
+			bufs.on(HURTSTUN_BUF)
+			bufs.on(INVINC_BUF)
 )
 
 var wall_clashed : bool = false
@@ -53,7 +60,15 @@ func _physics_process(delta: float) -> void:
 	if onfloor: bufs.on(ONFLOORBUF)
 	if onfloor: wall_clashed = false
 	
+	if not bufs.has(INVINC_BUF) and $hurt_detector.get_overlapping_bodies():
+		take_damage(1)
+	
 	match reapst.id:
+		HURTSTUNNED:
+			if velocity.x: turnst.goto(-signi(velocity.x))
+			velocity.x = move_toward(velocity.x, turnst.id * -1.0, 0.03)
+			velocity.y = move_toward(velocity.y, 2.0, 0.125)
+			if not bufs.has(HURTSTUN_BUF): reapst.goto(NORMAL)
 		ATTACKING:
 			velocity.x = move_toward(velocity.x * 0.95, 2.0 * pin_dpad.x, 0.15)
 			velocity.y = move_toward(velocity.y, -0.2, 0.1)
@@ -92,10 +107,16 @@ func _physics_process(delta: float) -> void:
 	
 	if applyvel:
 		if not mover.try_slip_move(self, $mover/solidcast, HORIZONTAL, velocity.x):
-			velocity.x = 0 # hit wall
+			if turnst.id == HURTSTUNNED:
+				velocity.x *= -0.5
+			else:
+				velocity.x = 0 # hit wall
 		if not mover.try_slip_move(self, $mover/solidcast, VERTICAL, velocity.y):
-			if velocity.y > 0: onfloor = true
-			velocity.y = 0 # hit floor/ceiling
+			if turnst.id == HURTSTUNNED:
+				velocity.y *= -0.5
+			else:
+				if velocity.y > 0: onfloor = true
+				velocity.y = 0 # hit floor/ceiling
 	
 	if bufs.has(ATTACK_DOING_BUF):
 		match reapst.id:
@@ -113,7 +134,12 @@ func _physics_process(delta: float) -> void:
 	else:
 		spr.setup([1])
 	
-	position.x = fposmod(position.x, 256)
+	if bufs.has(INVINC_BUF) and bufs.read(INVINC_BUF) % 7 > 3:
+		hide()
+	else:
+		show()
+	
+	position.x = fposmod(position.x, 512)
 
 var slash
 
@@ -136,9 +162,12 @@ func attack_air() -> void:
 	slash = SLASH_SCENE.instantiate().setup(self, slash_dir * 2)
 	slash.just_hit_wall.connect(func():
 		velocity.x = -1.5 * turnst.id
-		velocity.y = velocity.y * 0.6 - 2.0
+		velocity.y = minf(-1.5, velocity.y * 0.6 - 2.0)
 		reapst.goto(WALL_PRECLASH)
 		slash.set.call_deferred('process_mode', PROCESS_MODE_DISABLED)
 	)
 	slash.just_hit_plant.connect(func(plant):
 		plant.queue_free())
+
+func take_damage(damage : int = 1) -> void:
+	reapst.goto(HURTSTUNNED)

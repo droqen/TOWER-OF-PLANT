@@ -1,4 +1,4 @@
-[gd_scene load_steps=7 format=3 uid="uid://dsc18jn2l4rns"]
+[gd_scene load_steps=8 format=3 uid="uid://dsc18jn2l4rns"]
 
 [ext_resource type="Script" path="res://reaper.gd" id="1_vik3m"]
 [ext_resource type="Texture2D" uid="uid://b4ihg3gdvc28r" path="res://media/scythe_player.png" id="2_wp72c"]
@@ -8,6 +8,9 @@
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_jyi46"]
 size = Vector2(6, 18)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_hdd2u"]
+size = Vector2(8, 8)
 
 [node name="reaper" type="Node2D"]
 position = Vector2(40, 167)
@@ -29,3 +32,10 @@ script = ExtResource("5_tq6ax")
 [node name="solidcast" type="ShapeCast2D" parent="mover"]
 shape = SubResource("RectangleShape2D_jyi46")
 target_position = Vector2(0, 0)
+
+[node name="hurt_detector" type="Area2D" parent="."]
+collision_layer = 0
+collision_mask = 1024
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="hurt_detector"]
+shape = SubResource("RectangleShape2D_hdd2u")

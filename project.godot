@@ -20,10 +20,10 @@ config/icon="res://media/icon.png"
 
 [display]
 
-window/size/viewport_width=256
-window/size/viewport_height=224
-window/size/window_width_override=768
-window/size/window_height_override=672
+window/size/viewport_width=512
+window/size/viewport_height=384
+window/size/window_width_override=1024
+window/size/window_height_override=768
 window/stretch/mode="viewport"
 window/stretch/aspect="ignore"
 
@@ -45,6 +45,7 @@ jump={
 2d_physics/layer_4="kill"
 2d_physics/layer_5="plant"
 2d_physics/layer_7="pattack"
+2d_physics/layer_11="hurtsplayer"
 
 [rendering]
 

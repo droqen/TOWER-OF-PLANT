@@ -3,6 +3,7 @@ extends Node
 @export var maze : Maze
 
 const BADGRASS_PFB = preload("res://plants/scythe_badgrass.tscn")
+const THORNS_PFB = preload("res://plants/scythe_thorns.tscn")
 
 func _ready():
 	var solids : int = 0
@@ -11,10 +12,12 @@ func _ready():
 		if cell.x != 0 and cell.x != 15:
 			if not is_maze_cell_solid(cell):
 				if is_maze_cell_solid(cell + Vector2i.DOWN):
-					spawn_plant(BADGRASS_PFB, cell)
+					spawn_plant([BADGRASS_PFB, THORNS_PFB][randi()%2], cell)
 
 func is_maze_cell_solid(cell : Vector2i) -> bool:
-	return maze.get_cell_tile_data(cell).get_collision_polygons_count(0) > 0
+	var celldata = maze.get_cell_tile_data(cell)
+	if celldata: return celldata.get_collision_polygons_count(0) > 0
+	return false
 
 func spawn_plant(plant_pfb : PackedScene, cell : Vector2i) -> Node2D:
 	var plant = plant_pfb.instantiate()
