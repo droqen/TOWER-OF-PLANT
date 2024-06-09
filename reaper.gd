@@ -8,11 +8,13 @@ enum {
 	TURNHEADBUF, TURNBODYBUF, ATTACK_DOING_BUF, ATTACK_RECOVERY_BUF,
 	PINATTACKBUF, PINJUMPBUF, ONFLOORBUF,
 	WALL_PRECLASH_BUF, WALL_CLASHED_BUF,
-	HURTSTUN_BUF, INVINC_BUF,
+	HURTSTUN_BUF, INVINC_BUF, DOORWAY_BUF,
 	
-	NORMAL, JUMPED, ATTACKING, ATTACKING_FLOORSPIN, WALL_PRECLASH, WALL_CLASHED,
-	HURTSTUNNED,
-	DOORWAYING, DOORWAY_BUF,
+	NORMAL=101, JUMPED=102,
+	ATTACKING=201, ATTACKING_FLOORSPIN=202,
+	WALL_PRECLASH=301, WALL_CLASHED=302,
+	HURTSTUNNED=401,
+	DOORWAYING=501,
 }
 
 var doorwaying_node : Node2D
@@ -35,6 +37,9 @@ var doorwaying_node : Node2D
 
 @onready var reapst = TinyState.new(NORMAL,func(_then,now):
 	match now:
+		ATTACKING, ATTACKING_FLOORSPIN:
+			bufs.clr(ONFLOORBUF)
+			bufs.clr(PINJUMPBUF)
 		WALL_PRECLASH: bufs.on(WALL_PRECLASH_BUF)
 		WALL_CLASHED: bufs.on(WALL_CLASHED_BUF)
 		HURTSTUNNED:
@@ -136,6 +141,7 @@ func _physics_process(delta: float) -> void:
 				0.25 if onfloor else 0.15)
 			velocity.y = move_toward(velocity.y, 4.0,
 				gravity)
+			
 			if bufs.try_eat([PINJUMPBUF, ONFLOORBUF]):
 				onfloor = false
 				velocity.y = -3.2
@@ -160,6 +166,8 @@ func _physics_process(delta: float) -> void:
 	
 	if reapst.id == DOORWAYING:
 		spr.setup([4,5, 6,6,],8)
+	elif reapst.id == HURTSTUNNED:
+		spr.setup([10])
 	elif bufs.has(ATTACK_DOING_BUF):
 		match reapst.id:
 			ATTACKING_FLOORSPIN:
