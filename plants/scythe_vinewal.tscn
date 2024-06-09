@@ -5,7 +5,7 @@
 [ext_resource type="Resource" uid="uid://0fbu1br4k5v2" path="res://media/scythe_tiles_sheet.tres" id="3_8aou5"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_u6xn2"]
-size = Vector2(14, 32)
+size = Vector2(16, 32)
 
 [node name="VineWall" type="StaticBody2D"]
 collision_layer = 17

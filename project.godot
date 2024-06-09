@@ -18,6 +18,10 @@ boot_splash/image="res://media/icon.png"
 boot_splash/fullsize=false
 config/icon="res://media/icon.png"
 
+[autoload]
+
+Events="*res://screens/Events.gd"
+
 [display]
 
 window/size/viewport_width=512
@@ -45,6 +49,7 @@ jump={
 2d_physics/layer_4="kill"
 2d_physics/layer_5="plant"
 2d_physics/layer_7="pattack"
+2d_physics/layer_8="opendoor"
 2d_physics/layer_11="hurtsplayer"
 
 [rendering]

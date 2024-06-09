@@ -12,15 +12,19 @@ enum {
 	
 	NORMAL, JUMPED, ATTACKING, ATTACKING_FLOORSPIN, WALL_PRECLASH, WALL_CLASHED,
 	HURTSTUNNED,
+	DOORWAYING, DOORWAY_BUF,
 }
+
+var doorwaying_node : Node2D
 
 @onready var spr : SheetSprite = $SheetSprite
 
 @onready var bufs = Bufs.Make(self, [TURNHEADBUF,3, TURNBODYBUF,6,
-	ATTACK_DOING_BUF,16, ATTACK_RECOVERY_BUF,28,
+	ATTACK_DOING_BUF,16, ATTACK_RECOVERY_BUF,1,
 	PINATTACKBUF,4, PINJUMPBUF,5, ONFLOORBUF,8,
 	WALL_PRECLASH_BUF,10,	WALL_CLASHED_BUF,30,
 	HURTSTUN_BUF,30,		INVINC_BUF,89,
+	DOORWAY_BUF,20,
 ])
 #@onready var reapst = TinyState.new(NORMAL,func(_then,now):
 	#pass
@@ -38,9 +42,15 @@ enum {
 			velocity.y = -2.0
 			bufs.on(HURTSTUN_BUF)
 			bufs.on(INVINC_BUF)
+		DOORWAYING:
+			bufs.on(DOORWAY_BUF)
+			velocity *= 0
 )
 
 var wall_clashed : bool = false
+
+var stamina : int = 120
+var max_stamina : int = 120
 
 func _physics_process(delta: float) -> void:
 	var pin_dpad = Vector2(
@@ -52,6 +62,7 @@ func _physics_process(delta: float) -> void:
 	var pin_jump : bool = Input.is_action_just_pressed("jump")
 	var pin_jump_held : bool = Input.is_action_pressed("jump")
 	var pin_attack : bool = Input.is_action_just_pressed("attack")
+	
 	var mover : NavdiBodyMover = $mover
 	var onfloor : bool = velocity.y >= 0 and mover.cast_fraction(self, $mover/solidcast, VERTICAL, 0.5) < 1.0
 	var applyvel : bool = true;
@@ -85,13 +96,37 @@ func _physics_process(delta: float) -> void:
 			velocity.x = move_toward(velocity.x, 2.0 * pin_dpad.x, 0.02)
 			velocity.y = move_toward(velocity.y, 2.0, 0.075)
 			if onfloor or not bufs.has(WALL_CLASHED_BUF): reapst.goto(NORMAL)
+			
+			if bufs.try_eat([PINATTACKBUF]):
+				if stamina > 0:
+					stamina -= 50
+					if onfloor:
+						attack_floor()
+					else:
+						attack_air()
+				else:
+					pass
+		DOORWAYING:
+			if bufs.has(DOORWAY_BUF):
+				pass # keep going
+			else:
+				reapst.goto(NORMAL)
+				# change maps
+				Events.doorway_entered.emit(doorwaying_node)
+				return
 		NORMAL, JUMPED:
+			if stamina < max_stamina: stamina += 1
+			if stamina < max_stamina and onfloor: stamina += 1
 			if velocity.y >= 0: reapst.goto(NORMAL)
 			if not bufs.has(ATTACK_RECOVERY_BUF) and bufs.try_eat([PINATTACKBUF]):
-				if onfloor:
-					attack_floor()
+				if stamina > 0:
+					stamina -= 50
+					if onfloor:
+						attack_floor()
+					else:
+						attack_air()
 				else:
-					attack_air()
+					pass
 			if pin_dpad.x: turnst.goto(signi(pin_dpad.x))
 			
 			var gravity : float = 0.075
@@ -102,8 +137,13 @@ func _physics_process(delta: float) -> void:
 			velocity.y = move_toward(velocity.y, 4.0,
 				gravity)
 			if bufs.try_eat([PINJUMPBUF, ONFLOORBUF]):
+				onfloor = false
 				velocity.y = -3.2
 				reapst.goto(JUMPED)
+			
+			if onfloor and $door_detector.get_overlapping_areas() and pin_dpad.y > 0:
+				reapst.goto(DOORWAYING)
+				doorwaying_node = $door_detector.get_overlapping_areas()[0].get_parent()
 	
 	if applyvel:
 		if not mover.try_slip_move(self, $mover/solidcast, HORIZONTAL, velocity.x):
@@ -118,7 +158,9 @@ func _physics_process(delta: float) -> void:
 				if velocity.y > 0: onfloor = true
 				velocity.y = 0 # hit floor/ceiling
 	
-	if bufs.has(ATTACK_DOING_BUF):
+	if reapst.id == DOORWAYING:
+		spr.setup([4,5, 6,6,],8)
+	elif bufs.has(ATTACK_DOING_BUF):
 		match reapst.id:
 			ATTACKING_FLOORSPIN:
 				spr.setup([3])
@@ -138,6 +180,15 @@ func _physics_process(delta: float) -> void:
 		hide()
 	else:
 		show()
+	
+	if stamina >= max_stamina:
+		$stamina.hide()
+	else:
+		$stamina.show()
+		if stamina > 0:
+			$stamina/front.scale.y = stamina * 1.0 / max_stamina
+		else:
+			$stamina/front.scale.y = 0
 	
 	position.x = fposmod(position.x, 512)
 
