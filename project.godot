@@ -21,6 +21,7 @@ config/icon="res://media/icon.png"
 [autoload]
 
 Events="*res://screens/Events.gd"
+PlantSaveMap="*res://plants/PlantSaveMap.gd"
 
 [display]
 
@@ -43,14 +44,25 @@ jump={
 "events": [Object(InputEventKey,"resource_local_to_scene":false,"resource_name":"","device":-1,"window_id":0,"alt_pressed":false,"shift_pressed":false,"ctrl_pressed":false,"meta_pressed":false,"pressed":false,"keycode":0,"physical_keycode":90,"key_label":0,"unicode":122,"location":0,"echo":false,"script":null)
 ]
 }
+plant={
+"deadzone": 0.5,
+"events": [Object(InputEventKey,"resource_local_to_scene":false,"resource_name":"","device":-1,"window_id":0,"alt_pressed":false,"shift_pressed":false,"ctrl_pressed":false,"meta_pressed":false,"pressed":false,"keycode":0,"physical_keycode":80,"key_label":0,"unicode":112,"location":0,"echo":false,"script":null)
+]
+}
+ffwdtime={
+"deadzone": 0.5,
+"events": [Object(InputEventKey,"resource_local_to_scene":false,"resource_name":"","device":-1,"window_id":0,"alt_pressed":false,"shift_pressed":false,"ctrl_pressed":false,"meta_pressed":false,"pressed":false,"keycode":0,"physical_keycode":70,"key_label":0,"unicode":102,"location":0,"echo":false,"script":null)
+]
+}
 
 [layer_names]
 
 2d_physics/layer_4="kill"
 2d_physics/layer_5="plant"
-2d_physics/layer_7="pattack"
-2d_physics/layer_8="opendoor"
-2d_physics/layer_11="hurtsplayer"
+2d_physics/layer_7="player attack"
+2d_physics/layer_8="open door"
+2d_physics/layer_10="no planting"
+2d_physics/layer_11="hurts player"
 
 [rendering]
 

@@ -1,0 +1,29 @@
+[gd_scene load_steps=6 format=3 uid="uid://efcwcsfxwsto"]
+
+[ext_resource type="Script" path="res://plants/BasePlant.gd" id="1_bmioj"]
+[ext_resource type="Texture2D" uid="uid://drdsuhls644wk" path="res://media/scythe_tiles.png" id="2_pjb57"]
+[ext_resource type="Script" path="res://navdi4/main/navdisheetsprite.gd" id="3_3x6bq"]
+[ext_resource type="Resource" uid="uid://0fbu1br4k5v2" path="res://media/scythe_tiles_sheet.tres" id="4_48iwv"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_qfamu"]
+size = Vector2(16, 16)
+
+[node name="DefaultBasePlant" type="Node2D"]
+script = ExtResource("1_bmioj")
+
+[node name="spr" type="Sprite2D" parent="."]
+texture = ExtResource("2_pjb57")
+hframes = 10
+vframes = 10
+frame = 13
+script = ExtResource("3_3x6bq")
+sheet = ExtResource("4_48iwv")
+frames = PackedInt32Array(13)
+ani_period = 0
+
+[node name="body" type="StaticBody2D" parent="."]
+collision_layer = 16
+collision_mask = 0
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="body"]
+shape = SubResource("RectangleShape2D_qfamu")

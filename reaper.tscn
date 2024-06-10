@@ -10,7 +10,7 @@
 size = Vector2(6, 18)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_hdd2u"]
-size = Vector2(6, 4)
+size = Vector2(8, 20)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_ubggp"]
 size = Vector2(6, 4)
@@ -37,6 +37,7 @@ shape = SubResource("RectangleShape2D_jyi46")
 target_position = Vector2(0, 0)
 
 [node name="hurt_detector" type="Area2D" parent="."]
+position = Vector2(0, -6)
 collision_layer = 0
 collision_mask = 1024
 

@@ -13,7 +13,7 @@ func _ready():
 	var liquids : int = 0
 	for cell in maze.get_used_cells():
 		if cell.x > 0 and cell.x < 31:
-			if not is_maze_cell_solid(cell):
+			if not is_maze_cell_solid(cell) and not is_maze_cell_plantblocking(cell):
 				if is_maze_cell_solid(cell + Vector2i.DOWN):
 					spawn_plant(pickrand([
 						BADGRASS_PFB,
@@ -28,6 +28,11 @@ func pickrand(a:Array):
 func is_maze_cell_solid(cell : Vector2i) -> bool:
 	var celldata = maze.get_cell_tile_data(cell)
 	if celldata: return celldata.get_collision_polygons_count(0) > 0
+	return false
+
+func is_maze_cell_plantblocking(cell : Vector2i) -> bool:
+	var celldata = maze.get_cell_tile_data(cell)
+	if celldata: return celldata.get_collision_polygons_count(1) > 0
 	return false
 
 func spawn_plant(plant_pfb : PackedScene, cell : Vector2i) -> Node2D:

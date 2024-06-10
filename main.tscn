@@ -51,7 +51,7 @@ position = Vector2(0, -10)
 shape = SubResource("RectangleShape2D_ds1tg")
 
 [node name="reaper" parent="screens/outside_world" instance=ExtResource("3_81xe6")]
-position = Vector2(73, 275)
+position = Vector2(73, 279)
 
 [node name="camera" type="Camera2D" parent="screens/outside_world"]
 position = Vector2(257, 192)

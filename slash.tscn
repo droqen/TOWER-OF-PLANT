@@ -6,7 +6,7 @@
 [ext_resource type="Resource" uid="uid://cc5ynn03nhybl" path="res://media/twrfplnt_sheet.tres" id="3_jmcw2"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_jmxff"]
-size = Vector2(2, 16)
+size = Vector2(10, 16)
 
 [node name="slash" type="Node2D"]
 position = Vector2(58, 164)

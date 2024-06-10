@@ -1,0 +1,7 @@
+[gd_scene load_steps=3 format=3 uid="uid://hs8kftwhoq3e"]
+
+[ext_resource type="PackedScene" uid="uid://efcwcsfxwsto" path="res://plants/DefaultBasePlant.tscn" id="1_1d3fj"]
+[ext_resource type="Resource" uid="uid://crrowd0nhddc7" path="res://plants/badplants/badgrass_type.tres" id="2_rlpcj"]
+
+[node name="badgrass" instance=ExtResource("1_1d3fj")]
+plant_type = ExtResource("2_rlpcj")

@@ -5,7 +5,7 @@ enum {
 	OUTSIDE=53,
 }
 
-@onready var screens = get_children()
+@onready var outside_world = $outside_world
 
 func _ready() -> void:
 	Events.doorway_entered.connect(func(_doorway_node):
@@ -13,19 +13,12 @@ func _ready() -> void:
 	)
 
 @onready var screenst = TinyState.new(TOWER,func(_then,now):
+	if has_node('tower_world'): remove_child($tower_world)
+	if now != OUTSIDE:
+		if outside_world.is_inside_tree(): remove_child(outside_world)
 	match now:
 		TOWER:
-			set_active_children(['tower_world'])
+			add_child(load("res://screens/tower/tower_world.tscn").instantiate())
 		OUTSIDE:
-			set_active_children(['outside_world'])
+			if not outside_world.is_inside_tree(): add_child(outside_world)
 )
-
-func set_active_children(active_children: Array[String]):
-	for screen in screens:
-		var make_active = screen.name in active_children
-		var is_active = screen.is_inside_tree()
-		if is_active != make_active:
-			if make_active:
-				add_child(screen)
-			else:
-				remove_child(screen)

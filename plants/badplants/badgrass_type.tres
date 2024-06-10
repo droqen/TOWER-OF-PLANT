@@ -1,0 +1,8 @@
+[gd_resource type="Resource" script_class="PlantTypeData" load_steps=2 format=3 uid="uid://crrowd0nhddc7"]
+
+[ext_resource type="Script" path="res://plants/PlantTypeData.gd" id="1_8uaxr"]
+
+[resource]
+script = ExtResource("1_8uaxr")
+shortname = "badgrass"
+prefab_scene_path = "res://plants/badplants/badgrass.tscn"

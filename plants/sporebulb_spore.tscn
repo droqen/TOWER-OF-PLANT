@@ -6,23 +6,21 @@
 [ext_resource type="Resource" uid="uid://0fbu1br4k5v2" path="res://media/scythe_tiles_sheet.tres" id="3_gh6fk"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_tkssi"]
-radius = 1.0
+radius = 2.0
 
 [node name="SporebulbSpore" type="CharacterBody2D"]
 collision_layer = 1040
 script = ExtResource("1_py4hp")
 
 [node name="SheetSprite" type="Sprite2D" parent="."]
-position = Vector2(-1, 0)
 texture = ExtResource("1_apwju")
 hframes = 10
 vframes = 10
-frame = 25
+frame = 60
 script = ExtResource("2_yptyc")
 sheet = ExtResource("3_gh6fk")
-frames = PackedInt32Array(24, 25)
+frames = PackedInt32Array(60, 61)
 ani_period = 15
-ani_index = 1
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 shape = SubResource("CircleShape2D_tkssi")

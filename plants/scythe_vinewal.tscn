@@ -15,10 +15,10 @@ collision_mask = 64
 texture = ExtResource("1_mgfgk")
 hframes = 10
 vframes = 10
-frame = 16
+frame = 24
 script = ExtResource("2_de805")
 sheet = ExtResource("3_8aou5")
-frames = PackedInt32Array(16, 6, 16)
+frames = PackedInt32Array(24)
 ani_period = 37
 
 [node name="SheetSprite2" type="Sprite2D" parent="."]
@@ -26,12 +26,10 @@ position = Vector2(0, -16)
 texture = ExtResource("1_mgfgk")
 hframes = 10
 vframes = 10
-frame = 6
+frame = 15
 script = ExtResource("2_de805")
 sheet = ExtResource("3_8aou5")
-frames = PackedInt32Array(6, 6, 16)
-ani_period = 30
-ani_index = 1
+frames = PackedInt32Array(15)
 
 [node name="q" type="CollisionShape2D" parent="."]
 position = Vector2(0, -8)
