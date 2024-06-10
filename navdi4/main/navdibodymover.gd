@@ -42,9 +42,9 @@ func move(body : Node2D, axis, movement_amount : float = 0.0, snap_dir : int = 0
 func try_slip_move(body : Node2D, caster : ShapeCast2D, axis, movement_amount : float) -> bool:
 	var snap_dir = cast_best_snap_dir(body, caster, axis, movement_amount)
 	var fraction = cast_fraction(body, caster, axis, movement_amount, snap_dir)
-	if fraction < 1.0: movement_amount *= fraction
+	if fraction < 0.999: movement_amount *= fraction
 	if fraction > 0.001: move(body, axis, movement_amount, snap_dir)
-	return fraction >= 1.0
+	return fraction >= 0.999
 
 func snapp(value : float, snap_dir : int) -> float:
 	if snap_dir == 0: return value
